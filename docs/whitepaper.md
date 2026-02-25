@@ -658,7 +658,7 @@ This section elevates the demo from **technical proof** to **executive‑level a
 
 ```mermaid
 flowchart LR
-    User --> Gateway[MCP Gateway]
+    User --> Gateway[Agent Gateway]
     Gateway -->|user_id, role, purpose| Agent
     Agent --> Langfuse
     Agent --> Dynatrace
