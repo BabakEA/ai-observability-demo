@@ -1,0 +1,126 @@
+# LiteLLM Configuration for AI Observability Demo
+# OpenAI-compatible LLM Gateway with Langfuse integration
+
+model_list:
+  # ===========================================
+  # Groq Cloud Models (Fast Inference)
+  # ===========================================
+  
+  - model_name: llama-3.1-8b-instant
+    litellm_params:
+      model: groq/llama-3.1-8b-instant
+      api_key: os.environ/GROQ_API_KEY
+
+  - model_name: llama-3.1-70b-versatile
+    litellm_params:
+      model: groq/llama-3.1-70b-versatile
+      api_key: os.environ/GROQ_API_KEY
+
+  - model_name: llama-3.3-70b-versatile
+    litellm_params:
+      model: groq/llama-3.3-70b-versatile
+      api_key: os.environ/GROQ_API_KEY
+
+  - model_name: mixtral-8x7b
+    litellm_params:
+      model: groq/mixtral-8x7b-32768
+      api_key: os.environ/GROQ_API_KEY
+
+  # ===========================================
+  # Local Ollama Models
+  # ===========================================
+  
+  - model_name: local-llama3
+    litellm_params:
+      model: ollama/llama3
+      api_base: os.environ/OLLAMA_API_BASE
+
+  - model_name: local-mistral
+    litellm_params:
+      model: ollama/mistral
+      api_base: os.environ/OLLAMA_API_BASE
+
+  - model_name: local-phi3
+    litellm_params:
+      model: ollama/phi3
+      api_base: os.environ/OLLAMA_API_BASE
+
+  - model_name: local-qwen2
+    litellm_params:
+      model: ollama/qwen2
+      api_base: os.environ/OLLAMA_API_BASE
+
+  # ===========================================
+  # Default/Fallback Model
+  # ===========================================
+  
+  - model_name: gpt-4
+    litellm_params:
+      model: groq/llama-3.1-70b-versatile
+      api_key: os.environ/GROQ_API_KEY
+
+  - model_name: gpt-3.5-turbo
+    litellm_params:
+      model: groq/llama-3.1-8b-instant
+      api_key: os.environ/GROQ_API_KEY
+
+# ===========================================
+# LiteLLM Settings
+# ===========================================
+
+litellm_settings:
+  # Langfuse callbacks for LLM observability
+  success_callback: ["langfuse"]
+  failure_callback: ["langfuse"]
+  
+  # Token counting
+  set_verbose: true
+  
+  # Fallback configuration
+  fallbacks: [{"llama-3.1-70b-versatile": ["llama-3.1-8b-instant"]}]
+  
+  # Retry settings
+  num_retries: 3
+  request_timeout: 120
+
+  # Caching (optional - enable for production)
+  # cache: true
+  # cache_params:
+  #   type: redis
+  #   host: redis
+  #   port: 6379
+  #   password: os.environ/REDIS_AUTH
+
+# ===========================================
+# Router Settings
+# ===========================================
+
+router_settings:
+  # Load balancing
+  routing_strategy: simple-shuffle
+  
+  # Default model when no model specified
+  model_group_alias:
+    default: llama-3.1-8b-instant
+
+# ===========================================
+# General Settings
+# ===========================================
+
+general_settings:
+  # Master key for admin operations
+  master_key: os.environ/LITELLM_MASTER_KEY
+  
+  # Database for key management (optional)
+  # database_url: postgresql://langfuse:langfuse@postgres:5432/litellm
+  
+  # OTEL tracing
+  otel_tracing: true
+  
+  # Enable /health endpoint
+  health_check_enabled: true
+
+environment_variables:
+  LANGFUSE_PUBLIC_KEY: os.environ/LANGFUSE_PUBLIC_KEY
+  LANGFUSE_SECRET_KEY: os.environ/LANGFUSE_SECRET_KEY
+  LANGFUSE_HOST: os.environ/LANGFUSE_HOST

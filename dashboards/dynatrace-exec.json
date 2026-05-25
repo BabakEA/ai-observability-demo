@@ -1,0 +1,298 @@
+{
+  "dashboardMetadata": {
+    "name": "AI Observability - Executive Dashboard",
+    "shared": true,
+    "owner": "AI Platform Team",
+    "tags": ["ai", "observability", "llm", "mcp"],
+    "preset": false
+  },
+  "tiles": [
+    {
+      "name": "AI Platform Overview",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 0,
+        "left": 0,
+        "width": 1520,
+        "height": 38
+      }
+    },
+    {
+      "name": "MCP Gateway - Request Rate",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 38,
+        "left": 0,
+        "width": 380,
+        "height": 304
+      },
+      "tileFilter": {},
+      "customName": "MCP Gateway Requests/min",
+      "queries": [
+        {
+          "id": "A",
+          "metric": "builtin:service.requestCount.total",
+          "spaceAggregation": "SUM",
+          "timeAggregation": "DEFAULT",
+          "splitBy": ["dt.entity.service"],
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": [
+              {
+                "key": "dt.entity.service",
+                "value": "*mcp-gateway*",
+                "operator": "CONTAINS"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "LiteLLM - Response Time",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 38,
+        "left": 380,
+        "width": 380,
+        "height": 304
+      },
+      "tileFilter": {},
+      "customName": "LiteLLM P95 Latency",
+      "queries": [
+        {
+          "id": "B",
+          "metric": "builtin:service.response.time",
+          "spaceAggregation": "PERCENTILE",
+          "timeAggregation": "DEFAULT",
+          "percentile": 95,
+          "splitBy": ["dt.entity.service"],
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": [
+              {
+                "key": "dt.entity.service",
+                "value": "*litellm*",
+                "operator": "CONTAINS"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI Agent - Response Time",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 38,
+        "left": 760,
+        "width": 380,
+        "height": 304
+      },
+      "tileFilter": {},
+      "customName": "AI Agent P95 Latency",
+      "queries": [
+        {
+          "id": "C",
+          "metric": "builtin:service.response.time",
+          "spaceAggregation": "PERCENTILE",
+          "timeAggregation": "DEFAULT",
+          "percentile": 95,
+          "splitBy": ["dt.entity.service"],
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": [
+              {
+                "key": "dt.entity.service",
+                "value": "*ai-agent*",
+                "operator": "CONTAINS"
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Error Rate",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 38,
+        "left": 1140,
+        "width": 380,
+        "height": 304
+      },
+      "tileFilter": {},
+      "customName": "Platform Error Rate",
+      "queries": [
+        {
+          "id": "D",
+          "metric": "builtin:service.errors.total.rate",
+          "spaceAggregation": "AVG",
+          "timeAggregation": "DEFAULT",
+          "splitBy": ["dt.entity.service"],
+          "filterBy": {
+            "nestedFilters": [],
+            "criteria": []
+          }
+        }
+      ]
+    },
+    {
+      "name": "Service Dependencies",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 342,
+        "left": 0,
+        "width": 1520,
+        "height": 38
+      }
+    },
+    {
+      "name": "Service Flow",
+      "tileType": "SERVICES",
+      "configured": true,
+      "bounds": {
+        "top": 380,
+        "left": 0,
+        "width": 760,
+        "height": 304
+      },
+      "tileFilter": {},
+      "filterConfig": {
+        "type": "SERVICE",
+        "customName": "AI Platform Services",
+        "filtersPerEntityType": {
+          "SERVICE": {
+            "entityFilter": [],
+            "tagFilters": []
+          }
+        }
+      }
+    },
+    {
+      "name": "Distributed Traces",
+      "tileType": "PURE_MODEL_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 380,
+        "left": 760,
+        "width": 760,
+        "height": 304
+      },
+      "tileFilter": {},
+      "customName": "Recent AI Traces"
+    },
+    {
+      "name": "Infrastructure",
+      "tileType": "HEADER",
+      "configured": true,
+      "bounds": {
+        "top": 684,
+        "left": 0,
+        "width": 1520,
+        "height": 38
+      }
+    },
+    {
+      "name": "Container CPU",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 722,
+        "left": 0,
+        "width": 380,
+        "height": 266
+      },
+      "tileFilter": {},
+      "customName": "Container CPU Usage",
+      "queries": [
+        {
+          "id": "E",
+          "metric": "builtin:containers.cpu.usagePercent",
+          "spaceAggregation": "AVG",
+          "timeAggregation": "DEFAULT",
+          "splitBy": ["container.name"]
+        }
+      ]
+    },
+    {
+      "name": "Container Memory",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 722,
+        "left": 380,
+        "width": 380,
+        "height": 266
+      },
+      "tileFilter": {},
+      "customName": "Container Memory Usage",
+      "queries": [
+        {
+          "id": "F",
+          "metric": "builtin:containers.memory.usagePercent",
+          "spaceAggregation": "AVG",
+          "timeAggregation": "DEFAULT",
+          "splitBy": ["container.name"]
+        }
+      ]
+    },
+    {
+      "name": "Network Traffic",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 722,
+        "left": 760,
+        "width": 380,
+        "height": 266
+      },
+      "tileFilter": {},
+      "customName": "Network I/O",
+      "queries": [
+        {
+          "id": "G",
+          "metric": "builtin:host.net.nic.trafficIn",
+          "spaceAggregation": "SUM",
+          "timeAggregation": "DEFAULT",
+          "splitBy": []
+        },
+        {
+          "id": "H",
+          "metric": "builtin:host.net.nic.trafficOut",
+          "spaceAggregation": "SUM",
+          "timeAggregation": "DEFAULT",
+          "splitBy": []
+        }
+      ]
+    },
+    {
+      "name": "OTEL Collector Health",
+      "tileType": "DATA_EXPLORER",
+      "configured": true,
+      "bounds": {
+        "top": 722,
+        "left": 1140,
+        "width": 380,
+        "height": 266
+      },
+      "tileFilter": {},
+      "customName": "OTEL Collector Metrics",
+      "queries": [
+        {
+          "id": "I",
+          "metric": "otelcol_receiver_accepted_spans",
+          "spaceAggregation": "SUM",
+          "timeAggregation": "DEFAULT",
+          "splitBy": []
+        }
+      ]
+    }
+  ]
+}
